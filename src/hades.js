@@ -15,6 +15,7 @@
 
     window.__hds = { terminals: [], teardowns: [] };
     let globalState = stateCache || { openIds: [], configs: {} };
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
 
 
     const hds_el = (tag, attrs, children) => {
@@ -42,25 +43,25 @@
         svg.setAttribute("stroke-linecap", "round"); svg.setAttribute("stroke-linejoin", "round");
         paths.forEach(p => {
             const path = document.createElementNS("http://www.w3.org/2000/svg", p.tag);
-            for(let k in p.attrs) path.setAttribute(k, p.attrs[k]);
+            for (let k in p.attrs) path.setAttribute(k, p.attrs[k]);
             svg.appendChild(path);
         });
         return svg;
     };
-    const getIconCopy = () => hds_svg([{tag: 'rect', attrs: {x:"9",y:"9",width:"13",height:"13",rx:"2",ry:"2"}}, {tag: 'path', attrs: {d:"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"}}]);
-    const getIconCheck = () => hds_svg([{tag: 'polyline', attrs: {points:"20 6 9 17 4 12"}}]);
-    const getIconTheme = () => hds_svg([{tag: 'circle', attrs: {cx:"12",cy:"12",r:"10"}}, {tag: 'line', attrs: {x1:"14.31",y1:"8",x2:"20.05",y2:"17.94"}}, {tag: 'line', attrs: {x1:"9.69",y1:"8",x2:"21.17",y2:"8"}}, {tag: 'line', attrs: {x1:"7.38",y1:"12",x2:"13.12",y2:"2.06"}}, {tag: 'line', attrs: {x1:"9.69",y1:"16",x2:"3.95",y2:"6.06"}}, {tag: 'line', attrs: {x1:"14.31",y1:"16",x2:"2.83",y2:"16"}}, {tag: 'line', attrs: {x1:"16.62",y1:"12",x2:"10.88",y2:"21.94"}}]);
-    const getIconTrash = () => hds_svg([{tag: 'polyline', attrs: {points:"3 6 5 6 21 6"}}, {tag: 'path', attrs: {d:"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"}}, {tag: 'line', attrs: {x1:"10",y1:"11",x2:"10",y2:"17"}}, {tag: 'line', attrs: {x1:"14",y1:"11",x2:"14",y2:"17"}}]);
-    const getIconFont = () => hds_svg([{tag: 'polyline', attrs: {points:"4 7 4 4 20 4 20 7"}}, {tag: 'line', attrs: {x1:"9",y1:"20",x2:"15",y2:"20"}}, {tag: 'line', attrs: {x1:"12",y1:"4",x2:"12",y2:"20"}}]);
-    const getIconSync = () => hds_svg([{tag: 'polyline', attrs: {points:"23 4 23 10 17 10"}}, {tag: 'polyline', attrs: {points:"1 20 1 14 7 14"}}, {tag: 'path', attrs: {d:"M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"}}]);
-    const getIconEye = () => hds_svg([{tag: 'path', attrs: {d:"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"}}, {tag: 'circle', attrs: {cx:"12",cy:"12",r:"3"}}]);
-    const getIconDrop = () => hds_svg([{tag: 'path', attrs: {d:"M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"}}]);
-    const getIconShell = () => hds_svg([{tag: 'polyline', attrs: {points:"4 17 10 11 4 5"}}, {tag: 'line', attrs: {x1:"12",y1:"19",x2:"20",y2:"19"}}]);
-    const getIconDl = () => hds_svg([{tag: 'path', attrs: {d:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"}}, {tag: 'polyline', attrs: {points:"7 10 12 15 17 10"}}, {tag: 'line', attrs: {x1:"12",y1:"15",x2:"12",y2:"3"}}]);
-    const getIconArrowRight = () => hds_svg([{tag: 'line', attrs: {x1:"5",y1:"12",x2:"19",y2:"12"}}, {tag: 'polyline', attrs: {points:"12 5 19 12 12 19"}}]);
-    const getIconClock = () => hds_svg([{tag: 'circle', attrs: {cx:"12",cy:"12",r:"10"}}, {tag: 'polyline', attrs: {points:"12 6 12 12 16 14"}}]);
-    const getIconClose = () => hds_svg([{tag: 'line', attrs: {x1:"18",y1:"6",x2:"6",y2:"18"}}, {tag: 'line', attrs: {x1:"6",y1:"6",x2:"18",y2:"18"}}]);
-    const getIconPlus = () => hds_svg([{tag: 'line', attrs: {x1:"12",y1:"5",x2:"12",y2:"19"}}, {tag: 'line', attrs: {x1:"5",y1:"12",x2:"19",y2:"12"}}]);
+    const getIconCopy = () => hds_svg([{ tag: 'rect', attrs: { x: "9", y: "9", width: "13", height: "13", rx: "2", ry: "2" } }, { tag: 'path', attrs: { d: "M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" } }]);
+    const getIconCheck = () => hds_svg([{ tag: 'polyline', attrs: { points: "20 6 9 17 4 12" } }]);
+    const getIconTheme = () => hds_svg([{ tag: 'circle', attrs: { cx: "12", cy: "12", r: "10" } }, { tag: 'line', attrs: { x1: "14.31", y1: "8", x2: "20.05", y2: "17.94" } }, { tag: 'line', attrs: { x1: "9.69", y1: "8", x2: "21.17", y2: "8" } }, { tag: 'line', attrs: { x1: "7.38", y1: "12", x2: "13.12", y2: "2.06" } }, { tag: 'line', attrs: { x1: "9.69", y1: "16", x2: "3.95", y2: "6.06" } }, { tag: 'line', attrs: { x1: "14.31", y1: "16", x2: "2.83", y2: "16" } }, { tag: 'line', attrs: { x1: "16.62", y1: "12", x2: "10.88", y2: "21.94" } }]);
+    const getIconTrash = () => hds_svg([{ tag: 'polyline', attrs: { points: "3 6 5 6 21 6" } }, { tag: 'path', attrs: { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" } }, { tag: 'line', attrs: { x1: "10", y1: "11", x2: "10", y2: "17" } }, { tag: 'line', attrs: { x1: "14", y1: "11", x2: "14", y2: "17" } }]);
+    const getIconFont = () => hds_svg([{ tag: 'polyline', attrs: { points: "4 7 4 4 20 4 20 7" } }, { tag: 'line', attrs: { x1: "9", y1: "20", x2: "15", y2: "20" } }, { tag: 'line', attrs: { x1: "12", y1: "4", x2: "12", y2: "20" } }]);
+    const getIconSync = () => hds_svg([{ tag: 'polyline', attrs: { points: "23 4 23 10 17 10" } }, { tag: 'polyline', attrs: { points: "1 20 1 14 7 14" } }, { tag: 'path', attrs: { d: "M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" } }]);
+    const getIconEye = () => hds_svg([{ tag: 'path', attrs: { d: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" } }, { tag: 'circle', attrs: { cx: "12", cy: "12", r: "3" } }]);
+    const getIconDrop = () => hds_svg([{ tag: 'path', attrs: { d: "M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" } }]);
+    const getIconShell = () => hds_svg([{ tag: 'polyline', attrs: { points: "4 17 10 11 4 5" } }, { tag: 'line', attrs: { x1: "12", y1: "19", x2: "20", y2: "19" } }]);
+    const getIconDl = () => hds_svg([{ tag: 'path', attrs: { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" } }, { tag: 'polyline', attrs: { points: "7 10 12 15 17 10" } }, { tag: 'line', attrs: { x1: "12", y1: "15", x2: "12", y2: "3" } }]);
+    const getIconArrowRight = () => hds_svg([{ tag: 'line', attrs: { x1: "5", y1: "12", x2: "19", y2: "12" } }, { tag: 'polyline', attrs: { points: "12 5 19 12 12 19" } }]);
+    const getIconClock = () => hds_svg([{ tag: 'circle', attrs: { cx: "12", cy: "12", r: "10" } }, { tag: 'polyline', attrs: { points: "12 6 12 12 16 14" } }]);
+    const getIconClose = () => hds_svg([{ tag: 'line', attrs: { x1: "18", y1: "6", x2: "6", y2: "18" } }, { tag: 'line', attrs: { x1: "6", y1: "6", x2: "18", y2: "18" } }]);
+    const getIconPlus = () => hds_svg([{ tag: 'line', attrs: { x1: "12", y1: "5", x2: "12", y2: "19" } }, { tag: 'line', attrs: { x1: "5", y1: "12", x2: "19", y2: "12" } }]);
 
     const THEMES = [
         { name: 'Dark', bg: '13, 17, 23', fg: '#c9d1d9', p: '#3fb950', c: '#58a6ff', e: '#ff7b72', b: 'rgba(255,255,255,0.15)', shd: '0,0,0' },
@@ -95,18 +96,18 @@
             box.id = 'hds-domain-warning';
             box.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(${t.bg},0.95);color:${t.fg};padding:25px;border:1px solid ${t.b};border-radius:12px;z-index:2147483647;box-shadow:0 16px 48px rgba(${t.shd},0.5);font-family:ui-monospace,SFMono-Regular,monospace;text-align:center;backdrop-filter:blur(8px);min-width:300px;`;
 
-            box.appendChild(hds_el('div', {style: `margin-bottom:15px;font-size:18px;font-weight:bold;color:${t.e}`}, "⚠️ Domain Warning"));
-            const msg = hds_el('div', {style: "margin-bottom:25px;font-size:14px;opacity:0.85;line-height:1.5;"}, "Hades Terminal is designed to run on grok.com.");
+            box.appendChild(hds_el('div', { style: `margin-bottom:15px;font-size:18px;font-weight:bold;color:${t.e}` }, "⚠️ Domain Warning"));
+            const msg = hds_el('div', { style: "margin-bottom:25px;font-size:14px;opacity:0.85;line-height:1.5;" }, "Hades Terminal is designed to run on grok.com.");
             msg.appendChild(document.createElement('br'));
             msg.appendChild(document.createTextNode("Running it here may result in blocked requests or errors."));
             msg.appendChild(document.createElement('br'));
             msg.appendChild(document.createElement('br'));
             msg.appendChild(document.createTextNode("Proceed anyway?"));
             box.appendChild(msg);
-            
-            const btnNo = hds_el('button', {className: 'hds-btn-no', style: `flex:1;padding:10px;background:transparent;border:1px solid ${t.b};color:${t.fg};border-radius:6px;cursor:pointer;font-weight:bold;transition:background 0.2s;`, onmouseover: () => btnNo.style.background=t.b, onmouseout: () => btnNo.style.background='transparent'}, "No");
-            const btnYes = hds_el('button', {className: 'hds-btn-yes', style: `flex:1;padding:10px;background:${t.p};border:none;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;transition:filter 0.2s;`, onmouseover: () => btnYes.style.filter='brightness(1.2)', onmouseout: () => btnYes.style.filter='none'}, "Yes");
-            box.appendChild(hds_el('div', {style: "display:flex;gap:12px;justify-content:center;"}, [btnNo, btnYes]));
+
+            const btnNo = hds_el('button', { className: 'hds-btn-no', style: `flex:1;padding:10px;background:transparent;border:1px solid ${t.b};color:${t.fg};border-radius:6px;cursor:pointer;font-weight:bold;transition:background 0.2s;`, onmouseover: () => btnNo.style.background = t.b, onmouseout: () => btnNo.style.background = 'transparent' }, "No");
+            const btnYes = hds_el('button', { className: 'hds-btn-yes', style: `flex:1;padding:10px;background:${t.p};border:none;color:#fff;border-radius:6px;cursor:pointer;font-weight:bold;transition:filter 0.2s;`, onmouseover: () => btnYes.style.filter = 'brightness(1.2)', onmouseout: () => btnYes.style.filter = 'none' }, "Yes");
+            box.appendChild(hds_el('div', { style: "display:flex;gap:12px;justify-content:center;" }, [btnNo, btnYes]));
             document.body.appendChild(box);
             box.querySelector('.hds-btn-no').onclick = () => { box.remove(); resolve(false); };
             box.querySelector('.hds-btn-yes').onclick = () => { box.remove(); resolve(true); };
@@ -171,10 +172,10 @@
         color: '#c9d1d9', transition: 'transform 0.2s'
     });
 
-    const launcherIcon = hds_svg([{tag: 'polyline', attrs: {points:"4 17 10 11 4 5"}}, {tag: 'line', attrs: {x1:"12",y1:"19",x2:"20",y2:"19"}}]);
+    const launcherIcon = hds_svg([{ tag: 'polyline', attrs: { points: "4 17 10 11 4 5" } }, { tag: 'line', attrs: { x1: "12", y1: "19", x2: "20", y2: "19" } }]);
     launcherIcon.style.cssText = "width:20px;height:20px;";
     launcher.appendChild(launcherIcon);
-    const launcherClose = hds_el('div', {className: 'l-close', title: 'Close Launcher', style: 'position:absolute;top:-4px;right:-4px;background:#ff5f56;color:#fff;border-radius:50%;width:14px;height:14px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity 0.2s;'}, '×');
+    const launcherClose = hds_el('div', { className: 'l-close', title: 'Close Launcher', style: 'position:absolute;top:-4px;right:-4px;background:#ff5f56;color:#fff;border-radius:50%;width:14px;height:14px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity 0.2s;' }, '×');
     launcher.appendChild(launcherClose);
     document.body.appendChild(launcher);
 
@@ -200,31 +201,31 @@
         const toast = document.createElement('div');
         toast.id = 'hds-f4-toast';
         toast.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(${t.bg},0.95);color:${t.fg};padding:12px 18px;border:1px solid ${t.b};border-radius:8px;z-index:2147483647;box-shadow:0 8px 24px rgba(${t.shd},0.5);font-family:ui-monospace,SFMono-Regular,monospace;display:flex;align-items:center;gap:12px;backdrop-filter:blur(8px);opacity:0;transition:opacity 0.8s ease-out;`;
-        
-        const toastMsg = hds_el('div', {style: "font-size:13px;"}, ["Press ", hds_el('strong', {style: `color:${t.p}`}, "F4"), " to reopen."]);
-        const dontShowBtn = hds_el('button', {className: 'hds-btn-dont-show', style: `background:transparent;border:1px solid ${t.b};color:${t.fg};border-radius:4px;cursor:pointer;padding:2px 6px;font-size:10px;opacity:0.8;transition:background 0.2s;`, onmouseover: () => dontShowBtn.style.background=t.b, onmouseout: () => dontShowBtn.style.background='transparent'}, "Don't show again");
-        const closeToastBtn = hds_el('div', {className: 'hds-btn-close-toast', style: `cursor:pointer;font-size:20px;line-height:1;opacity:0.8;margin-left:8px;padding:0 4px;font-weight:bold;`, title: 'Close'}, '×');
-        
+
+        const toastMsg = hds_el('div', { style: "font-size:13px;" }, ["Press ", hds_el('strong', { style: `color:${t.p}` }, "F4"), " to reopen."]);
+        const dontShowBtn = hds_el('button', { className: 'hds-btn-dont-show', style: `background:transparent;border:1px solid ${t.b};color:${t.fg};border-radius:4px;cursor:pointer;padding:2px 6px;font-size:10px;opacity:0.8;transition:background 0.2s;`, onmouseover: () => dontShowBtn.style.background = t.b, onmouseout: () => dontShowBtn.style.background = 'transparent' }, "Don't show again");
+        const closeToastBtn = hds_el('div', { className: 'hds-btn-close-toast', style: `cursor:pointer;font-size:20px;line-height:1;opacity:0.8;margin-left:8px;padding:0 4px;font-weight:bold;`, title: 'Close' }, '×');
+
         toast.appendChild(toastMsg);
         toast.appendChild(dontShowBtn);
         toast.appendChild(closeToastBtn);
         document.body.appendChild(toast);
-        
+
         requestAnimationFrame(() => { toast.style.opacity = '1'; });
-        
+
         const removeToast = () => {
             if (!toast.parentNode) return;
             toast.style.opacity = '0';
             setTimeout(() => { if (toast.parentNode) toast.remove(); }, 800);
         };
-        
+
         let timeout = setTimeout(removeToast, 3000);
-        
+
         closeToastBtn.onclick = () => {
             clearTimeout(timeout);
             removeToast();
         };
-        
+
         toast.querySelector('.hds-btn-dont-show').onclick = () => {
             clearTimeout(timeout);
             globalState.hideF4Toast = true;
@@ -443,7 +444,7 @@
             const header = cEl('div', 'term-header', this.container);
             const titleDiv = cEl('div', 'term-title', header, `Hades [${this.id}]`);
             cEl('div', 'term-status-dot', titleDiv);
-            
+
             const ctrlContainer = cEl('div', 'term-controls', header);
             const themeDrop = cEl('div', 'dropdown', ctrlContainer);
             const themeBtn = cEl('button', 'icon-btn btn-theme', themeDrop); themeBtn.appendChild(getIconTheme()); themeBtn.title = 'Theme';
@@ -461,7 +462,7 @@
             const btnFont = cEl('button', 'icon-btn btn-font', fontDrop); btnFont.appendChild(getIconFont()); btnFont.title = 'Font';
             const fMenu = cEl('div', 'dropdown-menu dd-font', fontDrop);
             FONTS.forEach((f, i) => { const item = cEl('div', 'dropdown-item font-item', fMenu, f.name); item.dataset.idx = i; item.style.fontFamily = f.v; });
-            
+
             const sDrop = cEl('div', 'dropdown', ctrlContainer);
             const sBtn = cEl('div', 'env-select-btn', sDrop);
             const sIcon = cEl('span', '', sBtn); sIcon.appendChild(getIconShell()); sIcon.style.cssText = 'display:flex;align-items:center;';
@@ -474,7 +475,7 @@
 
             const btnTs = cEl('button', 'icon-btn btn-timestamp', ctrlContainer); btnTs.appendChild(getIconClock()); btnTs.title = 'Toggle Timestamps';
             const btnSync = cEl('button', 'icon-btn btn-sync', ctrlContainer); btnSync.appendChild(getIconSync()); btnSync.title = 'Sync with Environment';
-            
+
             cEl('div', 'divider', ctrlContainer);
 
             const slidersContainer = cEl('div', 'sliders-container', ctrlContainer);
@@ -485,10 +486,10 @@
             const sBlur = cEl('div', 'slider-wrap', slidersContainer);
             const bIconWrap = cEl('span', '', sBlur); bIconWrap.appendChild(getIconDrop()); bIconWrap.style.cssText = 'display:flex;align-items:center;opacity:0.6;margin-right:2px;';
             const iBlur = cEl('input', 'slider-blur', sBlur); iBlur.type = 'range'; iBlur.min = '0'; iBlur.max = '20'; iBlur.step = '1'; iBlur.title = 'Blur';
-            
+
             cEl('div', 'divider', ctrlContainer);
-            const btnClear = cEl('button', 'icon-btn btn-clear', ctrlContainer); btnClear.appendChild(getIconTrash()); btnClear.title = 'Clear (Ctrl+L)';
-            const btnClone = cEl('button', 'icon-btn btn-clone', ctrlContainer); btnClone.appendChild(getIconPlus()); btnClone.title = 'New Terminal';
+            const btnClear = cEl('button', 'icon-btn btn-clear', ctrlContainer); btnClear.appendChild(getIconTrash()); btnClear.title = isMac ? 'Clear (Ctrl+L)' : 'Clear (Alt+L)';
+            const btnClone = cEl('button', 'icon-btn btn-clone', ctrlContainer); btnClone.appendChild(getIconPlus()); btnClone.title = 'New Terminal Window';
             const btnClose = cEl('button', 'icon-btn btn-close', ctrlContainer); btnClose.appendChild(getIconClose()); btnClose.title = 'Close Terminal';
 
             cEl('div', 'term-body', this.container);
@@ -520,6 +521,10 @@
             this.resizers = this.shadow.querySelectorAll('.resizer');
             this.dragEdges = this.shadow.querySelectorAll('.drag-edge');
             this.toast = this.shadow.querySelector('.term-toast');
+            this.syncBtn = this.shadow.querySelector('.btn-sync');
+
+            this.syncBtn.addEventListener('mouseenter', () => this.updateSyncTooltip());
+            this.updateSyncTooltip();
         }
 
         applyState() {
@@ -553,6 +558,17 @@
             if (activeFont) activeFont.style.opacity = '1';
             const activeShell = this.shadow.querySelector(`.shell-item[data-val="${this.state.shell}"]`);
             if (activeShell) activeShell.style.opacity = '1';
+        }
+
+        updateSyncTooltip() {
+            if (!this.syncBtn) return;
+            const others = window.__hds.terminals.filter(t => t.id !== this.id).sort((a, b) => a.id - b.id);
+            const cyclePos = this.syncCycleIdx % (others.length + 1);
+            if (cyclePos < others.length) {
+                this.syncBtn.title = `Sync display settings from Terminal [${others[cyclePos].id}]`;
+            } else {
+                this.syncBtn.title = `Restore default display settings`;
+            }
         }
 
         toggleVisibility(force) {
@@ -628,7 +644,7 @@
                     e.preventDefault(); e.stopImmediatePropagation();
                     if (this.historyIndex < this.history.length - 1) { this.input.value = this.history[++this.historyIndex]; this.handleDynamicInput(); }
                     else if (this.historyIndex === this.history.length - 1) { this.historyIndex++; this.input.value = this.currentInput; this.handleDynamicInput(); }
-                } else if (e.key === 'l' && e.ctrlKey) {
+                } else if (e.key.toLowerCase() === 'l' && ((!isMac && e.altKey) || (isMac && e.ctrlKey))) {
                     e.preventDefault(); e.stopImmediatePropagation();
                     this.body.replaceChildren();
                 } else if (e.key === 'c' && e.ctrlKey && this.input.selectionStart === this.input.selectionEnd) {
@@ -747,14 +763,14 @@
 
             this.shadow.querySelector('.btn-sync').addEventListener('click', () => {
                 const others = window.__hds.terminals.filter(t => t.id !== this.id).sort((a, b) => a.id - b.id);
+                const cyclePos = this.syncCycleIdx % (others.length + 1);
+                this.syncCycleIdx++;
+
                 let targetState; let targetName;
 
-                if (others.length > 0) {
-                    const target = others[this.syncCycleIdx % others.length];
-                    this.syncCycleIdx++;
+                if (cyclePos < others.length) {
+                    const target = others[cyclePos];
                     targetState = target.state; targetName = `Terminal [${target.id}]`;
-                } else if (this.id !== 0 && globalState.configs[0]) {
-                    targetState = globalState.configs[0]; targetName = `Saved Slot [0]`;
                 } else {
                     targetState = { themeIdx: 0, fontIdx: 0, ts: true, alpha: 0.85, blur: 6, shell: 'bash', customShell: '' };
                     targetName = `Defaults`;
@@ -766,6 +782,7 @@
 
                 this.applyState(); this.resizeInput(); saveState();
                 this.showToast(targetName === 'Defaults' ? 'Restored default display settings' : `Synced to ${targetName}`);
+                this.updateSyncTooltip();
             });
 
             this.shadow.querySelector('.btn-close').addEventListener('click', () => {
@@ -902,8 +919,8 @@
         createBlock(commandStr) {
             const block = document.createElement('div'); block.className = 'execution-block';
             const header = document.createElement('div'); header.className = 'block-header';
-            header.appendChild(hds_el('span', {className: 'term-timestamp'}, `[${this.getTimestamp()}]`));
-            header.appendChild(hds_el('span', {className: 'block-cmd'}, `❯ ${commandStr.split('\n').join('\n  ')}`));
+            header.appendChild(hds_el('span', { className: 'term-timestamp' }, `[${this.getTimestamp()}]`));
+            header.appendChild(hds_el('span', { className: 'block-cmd' }, `❯ ${commandStr.split('\n').join('\n  ')}`));
 
             const copyCmdBtn = document.createElement('button'); copyCmdBtn.className = 'copy-btn copy-cmd'; copyCmdBtn.appendChild(getIconCopy());
             this.bindCopyButton(copyCmdBtn, () => commandStr); header.appendChild(copyCmdBtn);
