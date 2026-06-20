@@ -49,6 +49,16 @@
     };
     const getIconCopy = () => hds_svg([{tag: 'rect', attrs: {x:"9",y:"9",width:"13",height:"13",rx:"2",ry:"2"}}, {tag: 'path', attrs: {d:"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"}}]);
     const getIconCheck = () => hds_svg([{tag: 'polyline', attrs: {points:"20 6 9 17 4 12"}}]);
+    const getIconTheme = () => hds_svg([{tag: 'circle', attrs: {cx:"12",cy:"12",r:"10"}}, {tag: 'line', attrs: {x1:"14.31",y1:"8",x2:"20.05",y2:"17.94"}}, {tag: 'line', attrs: {x1:"9.69",y1:"8",x2:"21.17",y2:"8"}}, {tag: 'line', attrs: {x1:"7.38",y1:"12",x2:"13.12",y2:"2.06"}}, {tag: 'line', attrs: {x1:"9.69",y1:"16",x2:"3.95",y2:"6.06"}}, {tag: 'line', attrs: {x1:"14.31",y1:"16",x2:"2.83",y2:"16"}}, {tag: 'line', attrs: {x1:"16.62",y1:"12",x2:"10.88",y2:"21.94"}}]);
+    const getIconTrash = () => hds_svg([{tag: 'polyline', attrs: {points:"3 6 5 6 21 6"}}, {tag: 'path', attrs: {d:"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"}}, {tag: 'line', attrs: {x1:"10",y1:"11",x2:"10",y2:"17"}}, {tag: 'line', attrs: {x1:"14",y1:"11",x2:"14",y2:"17"}}]);
+    const getIconFont = () => hds_svg([{tag: 'polyline', attrs: {points:"4 7 4 4 20 4 20 7"}}, {tag: 'line', attrs: {x1:"9",y1:"20",x2:"15",y2:"20"}}, {tag: 'line', attrs: {x1:"12",y1:"4",x2:"12",y2:"20"}}]);
+    const getIconSync = () => hds_svg([{tag: 'polyline', attrs: {points:"23 4 23 10 17 10"}}, {tag: 'polyline', attrs: {points:"1 20 1 14 7 14"}}, {tag: 'path', attrs: {d:"M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"}}]);
+    const getIconEye = () => hds_svg([{tag: 'path', attrs: {d:"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"}}, {tag: 'circle', attrs: {cx:"12",cy:"12",r:"3"}}]);
+    const getIconDrop = () => hds_svg([{tag: 'path', attrs: {d:"M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"}}]);
+    const getIconShell = () => hds_svg([{tag: 'polyline', attrs: {points:"4 17 10 11 4 5"}}, {tag: 'line', attrs: {x1:"12",y1:"19",x2:"20",y2:"19"}}]);
+    const getIconDl = () => hds_svg([{tag: 'path', attrs: {d:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"}}, {tag: 'polyline', attrs: {points:"7 10 12 15 17 10"}}, {tag: 'line', attrs: {x1:"12",y1:"15",x2:"12",y2:"3"}}]);
+    const getIconClock = () => hds_svg([{tag: 'circle', attrs: {cx:"12",cy:"12",r:"10"}}, {tag: 'polyline', attrs: {points:"12 6 12 12 16 14"}}]);
+    const getIconClose = () => hds_svg([{tag: 'line', attrs: {x1:"18",y1:"6",x2:"6",y2:"18"}}, {tag: 'line', attrs: {x1:"6",y1:"6",x2:"18",y2:"18"}}]);
 
     const THEMES = [
         { name: 'Dark', bg: '13, 17, 23', fg: '#c9d1d9', p: '#3fb950', c: '#58a6ff', e: '#ff7b72', b: 'rgba(255,255,255,0.15)', shd: '0,0,0' },
@@ -403,55 +413,83 @@
             this.container = document.createElement('div');
             this.container.className = 'term-container';
 
-            const resizersHTML = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'].map(d => `<div class="resizer" data-dir="${d}"></div>`).join('');
-            const dragEdgesHTML = ['n', 's', 'e', 'w'].map(d => `<div class="drag-edge" data-edge="${d}" title="Drag terminal"></div>`).join('');
-            const fontsHTML = FONTS.map((f, i) => `<div class="dropdown-item font-item" data-idx="${i}" style="font-family:${f.v.replace(/"/g, '&quot;')}">${f.name}</div>`).join('');
+            const cEl = (tag, cls, parent, txt) => {
+                const e = document.createElement(tag);
+                if (cls) e.className = cls;
+                if (txt) e.textContent = txt;
+                if (parent) parent.appendChild(e);
+                return e;
+            };
 
-            const themesHTML = THEMES.map((t, i) => `
-                <div class="dropdown-item theme-item" data-idx="${i}" style="padding: 6px 8px;">
-                    <div style="display:flex;align-items:center;background:rgb(${t.bg});border:1px solid rgba(128,128,128,0.4);padding:6px 12px;border-radius:4px;font-family:monospace;width:100%;justify-content:space-between;box-shadow:inset 0 0 0 1px ${t.b}">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="color:${t.p}">❯</span>
-                            <span style="color:${t.fg};font-weight:bold;">${t.name}</span>
-                        </div>
-                        <div style="display:flex;gap:4px;">
-                            <div style="width:8px;height:8px;border-radius:50%;background:${t.c}"></div>
-                            <div style="width:8px;height:8px;border-radius:50%;background:${t.e}"></div>
-                        </div>
-                    </div>
-                </div>`).join('');
+            ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'].forEach(d => {
+                const r = cEl('div', 'resizer', this.container); r.dataset.dir = d;
+            });
+            ['n', 's', 'e', 'w'].forEach(d => {
+                const r = cEl('div', 'drag-edge', this.container); r.dataset.edge = d; r.title = 'Drag terminal';
+            });
 
-            const shellsHTML = SHELLS.map(s => `<div class="dropdown-item shell-item" data-val="${s}">${s}</div>`).join('');
+            const header = cEl('div', 'term-header', this.container);
+            const titleDiv = cEl('div', 'term-title', header, `Hades [${this.id}]`);
+            cEl('div', 'term-status-dot', titleDiv);
+            
+            const ctrlContainer = cEl('div', 'term-controls', header);
+            
+            const themeDrop = cEl('div', 'dropdown', ctrlContainer);
+            const themeBtn = cEl('button', 'icon-btn btn-theme', themeDrop); themeBtn.appendChild(getIconTheme()); themeBtn.title = 'Toggle Theme';
+            const themeMenu = cEl('div', 'dropdown-menu', themeDrop);
+            THEMES.forEach((t, i) => {
+                const item = cEl('div', 'dropdown-item theme-item', themeMenu); item.dataset.idx = i; item.style.padding = '6px 8px';
+                const inner = cEl('div', '', item); inner.style.cssText = `display:flex;align-items:center;background:rgb(${t.bg});border:1px solid rgba(128,128,128,0.4);padding:6px 12px;border-radius:4px;font-family:monospace;width:100%;justify-content:space-between;box-shadow:inset 0 0 0 1px ${t.b}`;
+                const l = cEl('div', '', inner); l.style.cssText = 'display:flex;align-items:center;gap:8px;';
+                const caret = cEl('span', '', l, '❯'); caret.style.color = t.p;
+                const name = cEl('span', '', l, t.name); name.style.color = t.fg; name.style.fontWeight = 'bold';
+                const r = cEl('div', '', inner); r.style.cssText = 'display:flex;gap:4px;';
+                const c1 = cEl('div', '', r); c1.style.cssText = `width:8px;height:8px;border-radius:50%;background:${t.c}`;
+                const c2 = cEl('div', '', r); c2.style.cssText = `width:8px;height:8px;border-radius:50%;background:${t.e}`;
+            });
 
-            const t = THEMES[this.state.themeIdx] || THEMES[0];
-            const header = hds_el('div', {className: 'hds-header', style: `background:rgba(${t.bg},0.95);padding:10px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid ${t.b};border-radius:10px 10px 0 0;font-size:12px;font-weight:bold;color:${t.fg};user-select:none;backdrop-filter:blur(10px);`});
+            const fontDrop = cEl('div', 'dropdown', ctrlContainer);
+            const fontBtn = cEl('button', 'icon-btn btn-font', fontDrop); fontBtn.appendChild(getIconFont()); fontBtn.title = 'Toggle Font';
+            const fontMenu = cEl('div', 'dropdown-menu', fontDrop);
+            FONTS.forEach((f, i) => {
+                const item = cEl('div', 'dropdown-item font-item', fontMenu, f.name); item.dataset.idx = i; item.style.fontFamily = f.v.replace(/"/g, '&quot;');
+            });
+
+            const btnSync = cEl('button', 'icon-btn btn-sync', ctrlContainer); btnSync.appendChild(getIconSync()); btnSync.title = 'Sync Settings';
+            const btnClone = cEl('button', 'icon-btn btn-clone', ctrlContainer); btnClone.appendChild(getIconCopy()); btnClone.title = 'Clone Terminal';
+            const btnClear = cEl('button', 'icon-btn btn-clear', ctrlContainer); btnClear.appendChild(getIconTrash()); btnClear.title = 'Clear (Ctrl+L)';
+            const btnClose = cEl('button', 'icon-btn btn-close', ctrlContainer); btnClose.appendChild(getIconClose()); btnClose.title = 'Close';
+
+            const envBar = cEl('div', 'term-env-bar', this.container);
+            const aWrap = cEl('div', 'slider-wrap', envBar); aWrap.title = 'Opacity';
+            const aIcon = cEl('span', '', aWrap); aIcon.appendChild(getIconEye());
+            const aSli = cEl('input', 'slider-alpha', aWrap); aSli.type = 'range'; aSli.min = '0.1'; aSli.max = '1'; aSli.step = '0.05';
+            const bWrap = cEl('div', 'slider-wrap', envBar); bWrap.title = 'Blur';
+            const bIcon = cEl('span', '', bWrap); bIcon.appendChild(getIconDrop());
+            const bSli = cEl('input', 'slider-blur', bWrap); bSli.type = 'range'; bSli.min = '0'; bSli.max = '20'; bSli.step = '1';
+
+            cEl('div', 'divider', envBar);
+
+            const sDrop = cEl('div', 'dropdown', envBar);
+            const sBtn = cEl('div', 'env-select-btn', sDrop);
+            const sIcon = cEl('span', '', sBtn); sIcon.appendChild(getIconShell());
+            cEl('span', 'shell-label', sBtn, 'bash');
+            const sMenu = cEl('div', 'dropdown-menu', sDrop);
+            SHELLS.forEach(s => { const item = cEl('div', 'dropdown-item shell-item', sMenu, s); item.dataset.val = s; });
             
-            const macBtns = hds_el('div', {style: "display:flex;gap:8px;"}, [
-                hds_el('div', {className: 'hds-btn-close hds-mac-btn', style: "background:#ff5f56;width:12px;height:12px;border-radius:50%;cursor:pointer;opacity:0.8;transition:opacity 0.2s;", title: "Close"}),
-                hds_el('div', {className: 'hds-btn-min hds-mac-btn', style: "background:#ffbd2e;width:12px;height:12px;border-radius:50%;cursor:pointer;opacity:0.8;transition:opacity 0.2s;", title: "Minimize"}),
-                hds_el('div', {className: 'hds-btn-max hds-mac-btn', style: "background:#27c93f;width:12px;height:12px;border-radius:50%;cursor:pointer;opacity:0.8;transition:opacity 0.2s;", title: "Maximize"})
-            ]);
-            
-            const titleDiv = hds_el('div', {style: "position:absolute;left:50%;transform:translateX(-50%);pointer-events:none;opacity:0.7;"}, `Hades [${this.id}]`);
-            
-            const actionBtns = hds_el('div', {style: "display:flex;gap:12px;"}, [
-                hds_el('div', {className: 'hds-btn-theme', style: "cursor:pointer;opacity:0.7;transition:opacity 0.2s;", title: "Toggle Theme"}, "🎨"),
-                hds_el('div', {className: 'hds-btn-trash', style: "cursor:pointer;opacity:0.7;transition:opacity 0.2s;", title: "Clear (Ctrl+L)"}, "🗑️")
-            ]);
-            
-            header.appendChild(macBtns);
-            header.appendChild(titleDiv);
-            header.appendChild(actionBtns);
-            
-            const body = hds_el('div', {className: 'hds-body', style: "flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;"});
-            
-            const footer = hds_el('div', {className: 'hds-footer', style: `padding:15px;display:flex;align-items:center;gap:10px;border-top:1px solid ${t.b};background:rgba(${t.bg},0.5);border-radius:0 0 10px 10px;`});
-            footer.appendChild(hds_el('span', {style: `color:${t.p};font-weight:bold;`}, ">_"));
-            footer.appendChild(hds_el('input', {type: 'text', className: 'hds-input', style: `flex:1;background:transparent;border:none;color:${t.fg};font-family:inherit;font-size:14px;outline:none;`, spellcheck: "false", autocomplete: "off", placeholder: "Run command..."}));
-            
-            this.container.appendChild(header);
-            this.container.appendChild(body);
-            this.container.appendChild(footer);
+            const cInp = cEl('input', 'env-custom-input', envBar); cInp.type = 'text'; cInp.placeholder = 'Custom shell cmd...';
+
+            cEl('div', 'divider', envBar);
+            const btnDl = cEl('button', 'icon-btn btn-dl', envBar); btnDl.appendChild(getIconDl()); btnDl.title = 'Download Mode';
+            const btnTs = cEl('button', 'icon-btn btn-timestamp', envBar); btnTs.appendChild(getIconClock()); btnTs.title = 'Toggle Timestamps';
+
+            cEl('div', 'term-body', this.container);
+            cEl('div', 'term-toast', this.container);
+
+            const footer = cEl('div', 'term-input-wrapper', this.container);
+            cEl('span', 'input-prompt', footer, '❯');
+            const input = cEl('input', 'command-input', footer); input.type = 'text'; input.spellcheck = false; input.autocomplete = 'off'; input.placeholder = 'Command...';
+            const sendBtn = cEl('button', 'send-btn', footer, '⏎');
 
             this.shadow.appendChild(style);
             this.shadow.appendChild(this.container);
