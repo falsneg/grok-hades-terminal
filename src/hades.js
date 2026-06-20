@@ -360,10 +360,11 @@
                     border: 1px solid var(--border); display: none; flex-direction: column; z-index: 100;
                     min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border-radius: 6px; padding: 4px;
                     max-height: 280px; overflow-y: auto; overflow-x: hidden; font-size: 12px; margin-top: 4px; text-shadow: none; gap: 4px;
+                    scrollbar-width: thin; scrollbar-color: rgba(150,150,150,0.8) rgba(0,0,0,0.3);
                 }
                 .dropdown.op .dropdown-menu { display: flex; }
 
-                .dropdown-item { padding: 6px 10px; cursor: pointer; border-radius: 4px; transition: background 0.1s; display: flex; align-items: center; justify-content: space-between; white-space: nowrap; }
+                .dropdown-item { padding: 6px 10px; cursor: pointer; border-radius: 4px; transition: background 0.1s; display: flex; align-items: center; justify-content: space-between; white-space: nowrap; flex-shrink: 0; }
                 .dropdown-item:hover { background: rgba(128,128,128,0.25); color: var(--prompt); }
                 
                 .slider-wrap { display: flex; align-items: center; gap: 4px; opacity: 0.7; padding: 0 4px; }
@@ -415,10 +416,10 @@
                 ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.3); border-radius: 4px; }
                 ::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.6); }
                 
-                .dropdown-menu::-webkit-scrollbar { width: 10px; height: 10px; }
-                .dropdown-menu::-webkit-scrollbar-track { background: rgba(0,0,0,0.15); border-radius: 5px; margin: 2px; }
-                .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.6); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; }
-                .dropdown-menu::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.9); border: 2px solid transparent; background-clip: padding-box; }
+                .dropdown-menu::-webkit-scrollbar { width: 8px; }
+                .dropdown-menu::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; margin: 4px; }
+                .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(150,150,150,0.8); border-radius: 4px; }
+                .dropdown-menu::-webkit-scrollbar-thumb:hover { background: rgba(200,200,200,0.9); }
                 .divider { width: 1px; height: 14px; background: var(--border); margin: 0 4px; }
             `;
 
