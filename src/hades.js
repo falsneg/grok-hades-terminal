@@ -362,11 +362,6 @@
                     max-height: 280px; overflow-y: auto; overflow-x: hidden; font-size: 12px; margin-top: 4px; text-shadow: none; gap: 4px;
                 }
                 .dropdown.op .dropdown-menu { display: flex; }
-                
-                .dropdown-menu::-webkit-scrollbar { width: 12px; }
-                .dropdown-menu::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 6px; margin: 4px; border: 1px solid rgba(255,255,255,0.05); }
-                .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.4); border-radius: 6px; border: 2px solid transparent; background-clip: padding-box; }
-                .dropdown-menu::-webkit-scrollbar-thumb:hover { background-color: rgba(255,255,255,0.6); }
 
                 .dropdown-item { padding: 6px 10px; cursor: pointer; border-radius: 4px; transition: background 0.1s; display: flex; align-items: center; justify-content: space-between; white-space: nowrap; }
                 .dropdown-item:hover { background: rgba(128,128,128,0.25); color: var(--prompt); }
@@ -413,13 +408,17 @@
                 .send-btn { background: transparent; border: none; color: inherit; cursor: pointer; opacity: 0.6; padding: 4px; border-radius: 4px; transition: all 0.1s; display: flex; align-items: center; justify-content: center; margin-top: 2px; text-shadow: none; }
                 .send-btn:hover { opacity: 1; background: rgba(128,128,128,0.25); color: var(--prompt); }
                 .send-btn:disabled { opacity: 0.2; transform: none; cursor: not-allowed; background: transparent; }
+                .btn-dl { margin-top: 2px; }
                 
                 ::-webkit-scrollbar { width: 8px; height: 8px; }
                 ::-webkit-scrollbar-track { background: transparent; }
                 ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.3); border-radius: 4px; }
                 ::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.6); }
-                .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.5); }
-                .dropdown-menu::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.8); }
+                
+                .dropdown-menu::-webkit-scrollbar { width: 10px; height: 10px; }
+                .dropdown-menu::-webkit-scrollbar-track { background: rgba(0,0,0,0.15); border-radius: 5px; margin: 2px; }
+                .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.6); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; }
+                .dropdown-menu::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.9); border: 2px solid transparent; background-clip: padding-box; }
                 .divider { width: 1px; height: 14px; background: var(--border); margin: 0 4px; }
             `;
 
