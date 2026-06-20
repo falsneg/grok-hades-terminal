@@ -57,8 +57,10 @@
     const getIconDrop = () => hds_svg([{tag: 'path', attrs: {d:"M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"}}]);
     const getIconShell = () => hds_svg([{tag: 'polyline', attrs: {points:"4 17 10 11 4 5"}}, {tag: 'line', attrs: {x1:"12",y1:"19",x2:"20",y2:"19"}}]);
     const getIconDl = () => hds_svg([{tag: 'path', attrs: {d:"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"}}, {tag: 'polyline', attrs: {points:"7 10 12 15 17 10"}}, {tag: 'line', attrs: {x1:"12",y1:"15",x2:"12",y2:"3"}}]);
+    const getIconArrowRight = () => hds_svg([{tag: 'line', attrs: {x1:"5",y1:"12",x2:"19",y2:"12"}}, {tag: 'polyline', attrs: {points:"12 5 19 12 12 19"}}]);
     const getIconClock = () => hds_svg([{tag: 'circle', attrs: {cx:"12",cy:"12",r:"10"}}, {tag: 'polyline', attrs: {points:"12 6 12 12 16 14"}}]);
     const getIconClose = () => hds_svg([{tag: 'line', attrs: {x1:"18",y1:"6",x2:"6",y2:"18"}}, {tag: 'line', attrs: {x1:"6",y1:"6",x2:"18",y2:"18"}}]);
+    const getIconPlus = () => hds_svg([{tag: 'line', attrs: {x1:"12",y1:"5",x2:"12",y2:"19"}}, {tag: 'line', attrs: {x1:"5",y1:"12",x2:"19",y2:"12"}}]);
 
     const THEMES = [
         { name: 'Dark', bg: '13, 17, 23', fg: '#c9d1d9', p: '#3fb950', c: '#58a6ff', e: '#ff7b72', b: 'rgba(255,255,255,0.15)', shd: '0,0,0' },
@@ -170,12 +172,10 @@
     });
 
     const launcherIcon = hds_svg([{tag: 'polyline', attrs: {points:"4 17 10 11 4 5"}}, {tag: 'line', attrs: {x1:"12",y1:"19",x2:"20",y2:"19"}}]);
-    launcherIcon.style.cssText = "width:18px;height:18px;position:absolute;";
+    launcherIcon.style.cssText = "width:20px;height:20px;";
     launcher.appendChild(launcherIcon);
     const launcherClose = hds_el('div', {className: 'l-close', title: 'Close Launcher', style: 'position:absolute;top:-4px;right:-4px;background:#ff5f56;color:#fff;border-radius:50%;width:14px;height:14px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity 0.2s;'}, '×');
     launcher.appendChild(launcherClose);
-    launcher.addEventListener('mouseenter', () => launcherClose.style.opacity = '1');
-    launcher.addEventListener('mouseleave', () => launcherClose.style.opacity = '0');
     document.body.appendChild(launcher);
 
     launcher.addEventListener('mouseenter', () => { launcher.style.transform = 'scale(1.1)'; launcherClose.style.opacity = '1'; });
@@ -203,7 +203,7 @@
         
         const toastMsg = hds_el('div', {style: "font-size:13px;"}, ["Press ", hds_el('strong', {style: `color:${t.p}`}, "F4"), " to reopen."]);
         const dontShowBtn = hds_el('button', {className: 'hds-btn-dont-show', style: `background:transparent;border:1px solid ${t.b};color:${t.fg};border-radius:4px;cursor:pointer;padding:2px 6px;font-size:10px;opacity:0.8;transition:background 0.2s;`, onmouseover: () => dontShowBtn.style.background=t.b, onmouseout: () => dontShowBtn.style.background='transparent'}, "Don't show again");
-        const closeToastBtn = hds_el('div', {className: 'hds-btn-close-toast', style: `cursor:pointer;font-size:16px;line-height:1;opacity:0.6;margin-left:4px;`, title: 'Close'}, '×');
+        const closeToastBtn = hds_el('div', {className: 'hds-btn-close-toast', style: `cursor:pointer;font-size:20px;line-height:1;opacity:0.8;margin-left:8px;padding:0 4px;font-weight:bold;`, title: 'Close'}, '×');
         
         toast.appendChild(toastMsg);
         toast.appendChild(dontShowBtn);
@@ -351,14 +351,14 @@
                 
                 .icon-btn { cursor: pointer; opacity: 0.6; transition: all 0.1s; display: flex; align-items: center; justify-content: center; color: var(--text); padding: 4px; border-radius: 4px; background: transparent; border: none; outline: none; text-shadow: none; }
                 .icon-btn:hover { opacity: 1; background: rgba(128,128,128,0.25); color: var(--prompt); }
-                .icon-btn.active { opacity: 1; color: var(--prompt); }
+                .icon-btn.active { opacity: 1; color: var(--prompt) !important; }
                 
                 .dropdown { position: relative; display: flex; align-items: center; }
                 .dropdown-menu {
                     position: absolute; top: 100%; right: 0; background: rgba(var(--bg-rgb), 0.98);
                     border: 1px solid var(--border); display: none; flex-direction: column; z-index: 100;
                     min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border-radius: 6px; padding: 4px;
-                    max-height: 280px; overflow-y: auto; overflow-x: hidden; backdrop-filter: blur(12px); font-size: 12px; margin-top: 4px; text-shadow: none; gap: 4px;
+                    max-height: 280px; overflow-y: auto; overflow-x: hidden; font-size: 12px; margin-top: 4px; text-shadow: none; gap: 4px;
                 }
                 .dropdown.op .dropdown-menu { display: flex; }
                 
@@ -390,6 +390,7 @@
                 .execution-block:hover { border-color: var(--prompt); background: rgba(0,0,0,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
                 .block-header { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; border-bottom: 1px dashed rgba(128,128,128,0.2); }
                 .term-timestamp { opacity: 0.5; font-size: 10.5px; user-select: none; line-height: 20px; white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+                .term-container:not(.show-timestamps) .term-timestamp { display: none !important; }
                 .block-cmd { color: var(--cmd); font-weight: 600; flex: 1; white-space: pre-wrap; word-break: break-all; line-height: 20px; }
                 .copy-btn { background: transparent; border: none; color: inherit; cursor: pointer; opacity: 0; padding: 4px; border-radius: 4px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; text-shadow: none; }
                 .execution-block:hover .copy-btn { opacity: 0.5; }
@@ -459,27 +460,28 @@
             });
 
             const fontDrop = cEl('div', 'dropdown', ctrlContainer);
-            const fontBtn = cEl('button', 'icon-btn btn-font', fontDrop); fontBtn.appendChild(getIconFont()); fontBtn.title = 'Toggle Font';
-            const fontMenu = cEl('div', 'dropdown-menu dd-font', fontDrop);
-            FONTS.forEach((f, i) => {
-                const item = cEl('div', 'dropdown-item font-item', fontMenu, f.name); item.dataset.idx = i; item.style.fontFamily = f.v.replace(/"/g, '&quot;');
-            });
-
-            const btnSync = cEl('button', 'icon-btn btn-sync', ctrlContainer); btnSync.appendChild(getIconSync()); btnSync.title = 'Sync Settings';
-            const btnClone = cEl('button', 'icon-btn btn-clone', ctrlContainer); btnClone.appendChild(getIconCopy()); btnClone.title = 'Clone Terminal';
+            const btnFont = cEl('button', 'icon-btn btn-font', fontDrop); btnFont.appendChild(getIconFont()); btnFont.title = 'Font';
+            const fMenu = cEl('div', 'dropdown-menu dd-font', fontDrop);
+            FONTS.forEach((f, i) => { const item = cEl('div', 'dropdown-item font-item', fMenu, f.name); item.dataset.idx = i; item.style.fontFamily = f.v; });
+            
+            const btnSync = cEl('button', 'icon-btn btn-sync', ctrlContainer); btnSync.appendChild(getIconSync()); btnSync.title = 'Sync with Environment';
+            const btnClone = cEl('button', 'icon-btn btn-clone', ctrlContainer); btnClone.appendChild(getIconPlus()); btnClone.title = 'New Terminal';
             const btnClear = cEl('button', 'icon-btn btn-clear', ctrlContainer); btnClear.appendChild(getIconTrash()); btnClear.title = 'Clear (Ctrl+L)';
-            const btnClose = cEl('button', 'icon-btn btn-close', ctrlContainer); btnClose.appendChild(getIconClose()); btnClose.title = 'Close';
+            
+            const slidersContainer = cEl('div', 'sliders-container', ctrlContainer);
+            slidersContainer.style.cssText = 'display:flex;gap:8px;padding:0 8px;align-items:center;';
+            const sAlpha = cEl('div', 'slider-wrap', slidersContainer);
+            sAlpha.innerHTML = '<span style="font-size:10px;user-select:none;">OP</span>';
+            const iAlpha = cEl('input', 'slider-alpha', sAlpha); iAlpha.type = 'range'; iAlpha.min = '0.3'; iAlpha.max = '1'; iAlpha.step = '0.05'; iAlpha.title = 'Opacity';
+            const sBlur = cEl('div', 'slider-wrap', slidersContainer);
+            sBlur.innerHTML = '<span style="font-size:10px;user-select:none;">BL</span>';
+            const iBlur = cEl('input', 'slider-blur', sBlur); iBlur.type = 'range'; iBlur.min = '0'; iBlur.max = '20'; iBlur.step = '1'; iBlur.title = 'Blur';
+            
+            cEl('div', 'divider', ctrlContainer);
+            const btnClose = cEl('button', 'icon-btn btn-close', ctrlContainer); btnClose.appendChild(getIconClose()); btnClose.title = 'Close Terminal';
 
             const envBar = cEl('div', 'term-env-bar', this.container);
-            const aWrap = cEl('div', 'slider-wrap', envBar); aWrap.title = 'Opacity';
-            const aIcon = cEl('span', '', aWrap); aIcon.appendChild(getIconEye());
-            const aSli = cEl('input', 'slider-alpha', aWrap); aSli.type = 'range'; aSli.min = '0.1'; aSli.max = '1'; aSli.step = '0.05';
-            const bWrap = cEl('div', 'slider-wrap', envBar); bWrap.title = 'Blur';
-            const bIcon = cEl('span', '', bWrap); bIcon.appendChild(getIconDrop());
-            const bSli = cEl('input', 'slider-blur', bWrap); bSli.type = 'range'; bSli.min = '0'; bSli.max = '20'; bSli.step = '1';
-
-            cEl('div', 'divider', envBar);
-
+            
             const sDrop = cEl('div', 'dropdown', envBar);
             const sBtn = cEl('div', 'env-select-btn', sDrop);
             const sIcon = cEl('span', '', sBtn); sIcon.appendChild(getIconShell());
@@ -494,12 +496,14 @@
             const btnTs = cEl('button', 'icon-btn btn-timestamp', envBar); btnTs.appendChild(getIconClock()); btnTs.title = 'Toggle Timestamps';
 
             cEl('div', 'term-body', this.container);
-            cEl('div', 'term-toast', this.container);
+            const toast = cEl('div', 'term-toast', this.container);
+            const toastClose = cEl('span', 'toast-close', toast, '×');
+            toastClose.onclick = () => toast.style.opacity = '0';
 
             const footer = cEl('div', 'term-input-wrapper', this.container);
-            cEl('span', 'input-prompt', footer, '❯');
+            const termPrompt = cEl('div', 'input-prompt', footer, '>_');
             const input = cEl('input', 'command-input', footer); input.type = 'text'; input.spellcheck = false; input.autocomplete = 'off'; input.placeholder = 'Command...';
-            const sendBtn = cEl('button', 'send-btn', footer, '⏎');
+            const sendBtn = cEl('button', 'send-btn', footer); sendBtn.appendChild(getIconArrowRight());
 
             this.shadow.appendChild(style);
             this.shadow.appendChild(this.container);
@@ -585,18 +589,14 @@
         }
 
         closeDropdowns() {
-            this.shadow.querySelectorAll('.dropdown.op').forEach(d => d.classList.remove('op'));
+            this.shadow.querySelectorAll('.dropdown.op, .dropdown-menu.op').forEach(d => d.classList.remove('op'));
         }
 
         handleDynamicInput() {
-            this.resizeInput();
             const val = this.input.value.trimStart();
             const firstWord = val.split(/\s+/)[0];
-            if (DL_ALIASES.includes(firstWord)) {
-                this.input.placeholder = "Enter file path to yoink...";
-            } else {
-                this.input.placeholder = "Command... (Shift+Enter for newline)";
-            }
+            const newPh = DL_ALIASES.includes(firstWord) ? "Enter file path to yoink..." : "Command... (Shift+Enter for newline)";
+            if (this.input.placeholder !== newPh) this.input.placeholder = newPh;
         }
 
         bindEvents() {
@@ -660,6 +660,8 @@
             const setupDropdownBtn = (btnSelector, ddSelector, cycleCallback) => {
                 const btn = this.shadow.querySelector(btnSelector);
                 const dd = this.shadow.querySelector(ddSelector);
+                if (!btn || !dd) return;
+                const container = dd.closest('.dropdown') || dd;
 
                 if (cycleCallback) {
                     btn.addEventListener('click', (e) => {
@@ -669,17 +671,17 @@
                 } else {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault(); e.stopPropagation();
-                        const wasOp = dd.classList.contains('op');
+                        const wasOp = container.classList.contains('op');
                         this.closeDropdowns();
-                        if (!wasOp) dd.classList.add('op');
+                        if (!wasOp) container.classList.add('op');
                     });
                 }
 
                 btn.addEventListener('contextmenu', (e) => {
                     e.preventDefault(); e.stopPropagation();
-                    const wasOp = dd.classList.contains('op');
+                    const wasOp = container.classList.contains('op');
                     this.closeDropdowns();
-                    if (!wasOp) dd.classList.add('op');
+                    if (!wasOp) container.classList.add('op');
                 });
             };
 
