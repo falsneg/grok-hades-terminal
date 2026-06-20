@@ -355,7 +355,7 @@
                 
                 .dropdown { position: relative; display: flex; align-items: center; }
                 .dropdown-menu {
-                    position: absolute; top: 100%; right: 0; background: rgba(var(--bg-rgb), 0.98);
+                    position: absolute; top: 100%; left: 0; background: rgba(var(--bg-rgb), 0.98);
                     border: 1px solid var(--border); display: none; flex-direction: column; z-index: 100;
                     min-width: 140px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); border-radius: 6px; padding: 4px;
                     max-height: 280px; overflow-y: auto; overflow-x: hidden; font-size: 12px; margin-top: 4px; text-shadow: none; gap: 4px;
@@ -377,10 +377,9 @@
                 input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; border-radius: 50%; background: var(--text); width: 10px; height: 10px; transition: all 0.1s; }
                 input[type="range"]:hover::-webkit-slider-thumb { background: var(--prompt); transform: scale(1.2); }
                 
-                .term-env-bar { display: flex; align-items: center; padding: 6px 12px; background: rgba(0,0,0,0.15); border-bottom: 1px solid var(--border); gap: 12px; z-index: 5; text-shadow: none; }
-                .env-select-btn { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; background: rgba(0,0,0,0.2); cursor: pointer; transition: all 0.2s; font-family: var(--font-family); }
-                .env-select-btn:hover { border-color: var(--prompt); color: var(--prompt); }
-                .env-custom-input { flex: 1; max-width: 150px; display: none; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: inherit; border-radius: 4px; padding: 4px 8px; font-size: 11px; outline: none; font-family: inherit; transition: all 0.2s; }
+                .env-select-btn { display: flex; align-items: center; gap: 6px; padding: 4px 6px; border-radius: 4px; background: transparent; cursor: pointer; transition: all 0.2s; font-family: var(--font-family); color: var(--text); opacity: 0.8; }
+                .env-select-btn:hover { opacity: 1; background: rgba(128,128,128,0.25); color: var(--prompt); }
+                .env-custom-input { display: none; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: inherit; border-radius: 4px; padding: 4px 6px; font-size: 11px; outline: none; font-family: inherit; transition: all 0.2s; width: 90px; }
                 .env-custom-input:focus { border-color: var(--prompt); }
                 
                 .term-body { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; contain: content; }
@@ -414,10 +413,12 @@
                 .send-btn:hover { opacity: 1; background: rgba(128,128,128,0.25); color: var(--prompt); }
                 .send-btn:disabled { opacity: 0.2; transform: none; cursor: not-allowed; background: transparent; }
                 
-                ::-webkit-scrollbar { width: 6px; height: 6px; }
+                ::-webkit-scrollbar { width: 8px; height: 8px; }
                 ::-webkit-scrollbar-track { background: transparent; }
-                ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.3); border-radius: 3px; }
-                ::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.5); }
+                ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.3); border-radius: 4px; }
+                ::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.6); }
+                .dropdown-menu::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.5); }
+                .dropdown-menu::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.8); }
                 .divider { width: 1px; height: 14px; background: var(--border); margin: 0 4px; }
             `;
 
@@ -444,19 +445,16 @@
             cEl('div', 'term-status-dot', titleDiv);
             
             const ctrlContainer = cEl('div', 'term-controls', header);
-            
             const themeDrop = cEl('div', 'dropdown', ctrlContainer);
-            const themeBtn = cEl('button', 'icon-btn btn-theme', themeDrop); themeBtn.appendChild(getIconTheme()); themeBtn.title = 'Toggle Theme';
+            const themeBtn = cEl('button', 'icon-btn btn-theme', themeDrop); themeBtn.appendChild(getIconTheme()); themeBtn.title = 'Theme';
             const themeMenu = cEl('div', 'dropdown-menu dd-theme', themeDrop);
             THEMES.forEach((t, i) => {
-                const item = cEl('div', 'dropdown-item theme-item', themeMenu); item.dataset.idx = i; item.style.padding = '6px 8px';
-                const inner = cEl('div', '', item); inner.style.cssText = `display:flex;align-items:center;background:rgb(${t.bg});border:1px solid rgba(128,128,128,0.4);padding:6px 12px;border-radius:4px;font-family:monospace;width:100%;justify-content:space-between;box-shadow:inset 0 0 0 1px ${t.b}`;
-                const l = cEl('div', '', inner); l.style.cssText = 'display:flex;align-items:center;gap:8px;';
-                const caret = cEl('span', '', l, '❯'); caret.style.color = t.p;
-                const name = cEl('span', '', l, t.name); name.style.color = t.fg; name.style.fontWeight = 'bold';
-                const r = cEl('div', '', inner); r.style.cssText = 'display:flex;gap:4px;';
-                const c1 = cEl('div', '', r); c1.style.cssText = `width:8px;height:8px;border-radius:50%;background:${t.c}`;
-                const c2 = cEl('div', '', r); c2.style.cssText = `width:8px;height:8px;border-radius:50%;background:${t.e}`;
+                const item = cEl('div', 'dropdown-item theme-item', themeMenu); item.dataset.idx = i; item.style.padding = '4px 6px';
+                const inner = cEl('div', '', item); inner.style.cssText = `display:flex;align-items:center;background:rgb(${t.bg});padding:4px 8px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,monospace;width:100%;justify-content:space-between;border:1px solid transparent;transition:border-color 0.1s;`;
+                const name = cEl('span', '', inner, t.name); name.style.color = t.fg; name.style.fontSize = '11px';
+                const r = cEl('div', '', inner); r.style.cssText = 'display:flex;gap:4px;align-items:center;';
+                const c1 = cEl('div', '', r); c1.style.cssText = `width:6px;height:6px;border-radius:50%;background:${t.p}`;
+                const c2 = cEl('div', '', r); c2.style.cssText = `width:6px;height:6px;border-radius:50%;background:${t.c}`;
             });
 
             const fontDrop = cEl('div', 'dropdown', ctrlContainer);
@@ -464,36 +462,34 @@
             const fMenu = cEl('div', 'dropdown-menu dd-font', fontDrop);
             FONTS.forEach((f, i) => { const item = cEl('div', 'dropdown-item font-item', fMenu, f.name); item.dataset.idx = i; item.style.fontFamily = f.v; });
             
-            const btnSync = cEl('button', 'icon-btn btn-sync', ctrlContainer); btnSync.appendChild(getIconSync()); btnSync.title = 'Sync with Environment';
-            const btnClone = cEl('button', 'icon-btn btn-clone', ctrlContainer); btnClone.appendChild(getIconPlus()); btnClone.title = 'New Terminal';
-            const btnClear = cEl('button', 'icon-btn btn-clear', ctrlContainer); btnClear.appendChild(getIconTrash()); btnClear.title = 'Clear (Ctrl+L)';
-            
-            const slidersContainer = cEl('div', 'sliders-container', ctrlContainer);
-            slidersContainer.style.cssText = 'display:flex;gap:8px;padding:0 8px;align-items:center;';
-            const sAlpha = cEl('div', 'slider-wrap', slidersContainer);
-            sAlpha.innerHTML = '<span style="font-size:10px;user-select:none;">OP</span>';
-            const iAlpha = cEl('input', 'slider-alpha', sAlpha); iAlpha.type = 'range'; iAlpha.min = '0.3'; iAlpha.max = '1'; iAlpha.step = '0.05'; iAlpha.title = 'Opacity';
-            const sBlur = cEl('div', 'slider-wrap', slidersContainer);
-            sBlur.innerHTML = '<span style="font-size:10px;user-select:none;">BL</span>';
-            const iBlur = cEl('input', 'slider-blur', sBlur); iBlur.type = 'range'; iBlur.min = '0'; iBlur.max = '20'; iBlur.step = '1'; iBlur.title = 'Blur';
-            
-            cEl('div', 'divider', ctrlContainer);
-            const btnClose = cEl('button', 'icon-btn btn-close', ctrlContainer); btnClose.appendChild(getIconClose()); btnClose.title = 'Close Terminal';
-
-            const envBar = cEl('div', 'term-env-bar', this.container);
-            
-            const sDrop = cEl('div', 'dropdown', envBar);
+            const sDrop = cEl('div', 'dropdown', ctrlContainer);
             const sBtn = cEl('div', 'env-select-btn', sDrop);
-            const sIcon = cEl('span', '', sBtn); sIcon.appendChild(getIconShell());
+            const sIcon = cEl('span', '', sBtn); sIcon.appendChild(getIconShell()); sIcon.style.cssText = 'display:flex;align-items:center;';
             cEl('span', 'shell-label', sBtn, 'bash');
             const sMenu = cEl('div', 'dropdown-menu dd-shell', sDrop);
             SHELLS.forEach(s => { const item = cEl('div', 'dropdown-item shell-item', sMenu, s); item.dataset.val = s; });
-            
-            const cInp = cEl('input', 'env-custom-input', envBar); cInp.type = 'text'; cInp.placeholder = 'Custom shell cmd...';
+            const cInp = cEl('input', 'env-custom-input', ctrlContainer); cInp.type = 'text'; cInp.placeholder = 'Custom cmd...';
 
-            cEl('div', 'divider', envBar);
-            const btnDl = cEl('button', 'icon-btn btn-dl', envBar); btnDl.appendChild(getIconDl()); btnDl.title = 'Download Mode';
-            const btnTs = cEl('button', 'icon-btn btn-timestamp', envBar); btnTs.appendChild(getIconClock()); btnTs.title = 'Toggle Timestamps';
+            cEl('div', 'divider', ctrlContainer);
+
+            const btnTs = cEl('button', 'icon-btn btn-timestamp', ctrlContainer); btnTs.appendChild(getIconClock()); btnTs.title = 'Toggle Timestamps';
+            const btnSync = cEl('button', 'icon-btn btn-sync', ctrlContainer); btnSync.appendChild(getIconSync()); btnSync.title = 'Sync with Environment';
+            
+            cEl('div', 'divider', ctrlContainer);
+
+            const slidersContainer = cEl('div', 'sliders-container', ctrlContainer);
+            slidersContainer.style.cssText = 'display:flex;gap:8px;padding:0 8px;align-items:center;';
+            const sAlpha = cEl('div', 'slider-wrap', slidersContainer);
+            const aIconWrap = cEl('span', '', sAlpha); aIconWrap.appendChild(getIconEye()); aIconWrap.style.cssText = 'display:flex;align-items:center;opacity:0.6;margin-right:2px;';
+            const iAlpha = cEl('input', 'slider-alpha', sAlpha); iAlpha.type = 'range'; iAlpha.min = '0.3'; iAlpha.max = '1'; iAlpha.step = '0.05'; iAlpha.title = 'Opacity';
+            const sBlur = cEl('div', 'slider-wrap', slidersContainer);
+            const bIconWrap = cEl('span', '', sBlur); bIconWrap.appendChild(getIconDrop()); bIconWrap.style.cssText = 'display:flex;align-items:center;opacity:0.6;margin-right:2px;';
+            const iBlur = cEl('input', 'slider-blur', sBlur); iBlur.type = 'range'; iBlur.min = '0'; iBlur.max = '20'; iBlur.step = '1'; iBlur.title = 'Blur';
+            
+            cEl('div', 'divider', ctrlContainer);
+            const btnClear = cEl('button', 'icon-btn btn-clear', ctrlContainer); btnClear.appendChild(getIconTrash()); btnClear.title = 'Clear (Ctrl+L)';
+            const btnClone = cEl('button', 'icon-btn btn-clone', ctrlContainer); btnClone.appendChild(getIconPlus()); btnClone.title = 'New Terminal';
+            const btnClose = cEl('button', 'icon-btn btn-close', ctrlContainer); btnClose.appendChild(getIconClose()); btnClose.title = 'Close Terminal';
 
             cEl('div', 'term-body', this.container);
             const toast = cEl('div', 'term-toast', this.container);
@@ -501,7 +497,8 @@
             toastClose.onclick = () => toast.style.opacity = '0';
 
             const footer = cEl('div', 'term-input-wrapper', this.container);
-            const termPrompt = cEl('div', 'input-prompt', footer, '>_');
+            const btnDl = cEl('button', 'icon-btn btn-dl', footer); btnDl.appendChild(getIconDl()); btnDl.title = 'Download Mode';
+            const termPrompt = cEl('div', 'input-prompt', footer, '>');
             const input = cEl('input', 'command-input', footer); input.type = 'text'; input.spellcheck = false; input.autocomplete = 'off'; input.placeholder = 'Command...';
             const sendBtn = cEl('button', 'send-btn', footer); sendBtn.appendChild(getIconArrowRight());
 
