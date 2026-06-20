@@ -169,14 +169,17 @@
         color: '#c9d1d9', transition: 'transform 0.2s'
     });
 
-    launcher.appendChild(hds_el('div', {className: 'l-orb'}));
-    launcher.appendChild(hds_el('div', {className: 'l-orb'}));
-    launcher.appendChild(hds_el('div', {className: 'l-orb'}));
-    launcher.appendChild(hds_el('div', {className: 'l-close', title: 'Close Launcher'}, '×'));
+    const launcherIcon = hds_svg([{tag: 'polyline', attrs: {points:"4 17 10 11 4 5"}}, {tag: 'line', attrs: {x1:"12",y1:"19",x2:"20",y2:"19"}}]);
+    launcherIcon.style.cssText = "width:18px;height:18px;position:absolute;";
+    launcher.appendChild(launcherIcon);
+    const launcherClose = hds_el('div', {className: 'l-close', title: 'Close Launcher', style: 'position:absolute;top:-4px;right:-4px;background:#ff5f56;color:#fff;border-radius:50%;width:14px;height:14px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity 0.2s;'}, '×');
+    launcher.appendChild(launcherClose);
+    launcher.addEventListener('mouseenter', () => launcherClose.style.opacity = '1');
+    launcher.addEventListener('mouseleave', () => launcherClose.style.opacity = '0');
     document.body.appendChild(launcher);
 
-    launcher.addEventListener('mouseenter', () => launcher.style.transform = 'scale(1.1)');
-    launcher.addEventListener('mouseleave', () => launcher.style.transform = 'scale(1)');
+    launcher.addEventListener('mouseenter', () => { launcher.style.transform = 'scale(1.1)'; launcherClose.style.opacity = '1'; });
+    launcher.addEventListener('mouseleave', () => { launcher.style.transform = 'scale(1)'; launcherClose.style.opacity = '0'; });
     launcher.addEventListener('click', () => {
         if (window.__hds.terminals.length === 0) {
             globalState.openIds = [0];
@@ -196,30 +199,37 @@
         const t = THEMES[(globalState.configs[0] && globalState.configs[0].themeIdx) || 0] || THEMES[0];
         const toast = document.createElement('div');
         toast.id = 'hds-f4-toast';
-        toast.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(${t.bg},0.95);color:${t.fg};padding:15px 20px;border:1px solid ${t.b};border-radius:8px;z-index:2147483647;box-shadow:0 8px 24px rgba(${t.shd},0.5);font-family:ui-monospace,SFMono-Regular,monospace;display:flex;align-items:center;gap:15px;backdrop-filter:blur(8px);opacity:0;transition:opacity 0.3s;`;
+        toast.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(${t.bg},0.95);color:${t.fg};padding:12px 18px;border:1px solid ${t.b};border-radius:8px;z-index:2147483647;box-shadow:0 8px 24px rgba(${t.shd},0.5);font-family:ui-monospace,SFMono-Regular,monospace;display:flex;align-items:center;gap:12px;backdrop-filter:blur(8px);opacity:0;transition:opacity 0.8s ease-out;`;
         
-
-        const toastMsg = hds_el('div', {style: "font-size:14px;"}, ["Press ", hds_el('strong', {style: `color:${t.p}`}, "F4"), " to reopen the terminal."]);
-        const dontShowBtn = hds_el('button', {className: 'hds-btn-dont-show', style: `background:transparent;border:1px solid ${t.b};color:${t.fg};border-radius:4px;cursor:pointer;padding:5px 10px;font-size:12px;transition:background 0.2s;`, onmouseover: () => dontShowBtn.style.background=t.b, onmouseout: () => dontShowBtn.style.background='transparent'}, "Don't show again");
+        const toastMsg = hds_el('div', {style: "font-size:13px;"}, ["Press ", hds_el('strong', {style: `color:${t.p}`}, "F4"), " to reopen."]);
+        const dontShowBtn = hds_el('button', {className: 'hds-btn-dont-show', style: `background:transparent;border:1px solid ${t.b};color:${t.fg};border-radius:4px;cursor:pointer;padding:2px 6px;font-size:10px;opacity:0.8;transition:background 0.2s;`, onmouseover: () => dontShowBtn.style.background=t.b, onmouseout: () => dontShowBtn.style.background='transparent'}, "Don't show again");
+        const closeToastBtn = hds_el('div', {className: 'hds-btn-close-toast', style: `cursor:pointer;font-size:16px;line-height:1;opacity:0.6;margin-left:4px;`, title: 'Close'}, '×');
+        
         toast.appendChild(toastMsg);
         toast.appendChild(dontShowBtn);
+        toast.appendChild(closeToastBtn);
         document.body.appendChild(toast);
         
         requestAnimationFrame(() => { toast.style.opacity = '1'; });
         
-        let timeout = setTimeout(() => {
-            if (toast.parentNode) {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }
-        }, 5000);
+        const removeToast = () => {
+            if (!toast.parentNode) return;
+            toast.style.opacity = '0';
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 800);
+        };
+        
+        let timeout = setTimeout(removeToast, 3000);
+        
+        closeToastBtn.onclick = () => {
+            clearTimeout(timeout);
+            removeToast();
+        };
         
         toast.querySelector('.hds-btn-dont-show').onclick = () => {
             clearTimeout(timeout);
             globalState.hideF4Toast = true;
             saveState();
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
+            removeToast();
         };
     };
 
@@ -436,7 +446,7 @@
             
             const themeDrop = cEl('div', 'dropdown', ctrlContainer);
             const themeBtn = cEl('button', 'icon-btn btn-theme', themeDrop); themeBtn.appendChild(getIconTheme()); themeBtn.title = 'Toggle Theme';
-            const themeMenu = cEl('div', 'dropdown-menu', themeDrop);
+            const themeMenu = cEl('div', 'dropdown-menu dd-theme', themeDrop);
             THEMES.forEach((t, i) => {
                 const item = cEl('div', 'dropdown-item theme-item', themeMenu); item.dataset.idx = i; item.style.padding = '6px 8px';
                 const inner = cEl('div', '', item); inner.style.cssText = `display:flex;align-items:center;background:rgb(${t.bg});border:1px solid rgba(128,128,128,0.4);padding:6px 12px;border-radius:4px;font-family:monospace;width:100%;justify-content:space-between;box-shadow:inset 0 0 0 1px ${t.b}`;
@@ -450,7 +460,7 @@
 
             const fontDrop = cEl('div', 'dropdown', ctrlContainer);
             const fontBtn = cEl('button', 'icon-btn btn-font', fontDrop); fontBtn.appendChild(getIconFont()); fontBtn.title = 'Toggle Font';
-            const fontMenu = cEl('div', 'dropdown-menu', fontDrop);
+            const fontMenu = cEl('div', 'dropdown-menu dd-font', fontDrop);
             FONTS.forEach((f, i) => {
                 const item = cEl('div', 'dropdown-item font-item', fontMenu, f.name); item.dataset.idx = i; item.style.fontFamily = f.v.replace(/"/g, '&quot;');
             });
@@ -474,7 +484,7 @@
             const sBtn = cEl('div', 'env-select-btn', sDrop);
             const sIcon = cEl('span', '', sBtn); sIcon.appendChild(getIconShell());
             cEl('span', 'shell-label', sBtn, 'bash');
-            const sMenu = cEl('div', 'dropdown-menu', sDrop);
+            const sMenu = cEl('div', 'dropdown-menu dd-shell', sDrop);
             SHELLS.forEach(s => { const item = cEl('div', 'dropdown-item shell-item', sMenu, s); item.dataset.val = s; });
             
             const cInp = cEl('input', 'env-custom-input', envBar); cInp.type = 'text'; cInp.placeholder = 'Custom shell cmd...';
@@ -887,8 +897,7 @@
         }
 
         resizeInput() {
-            this.input.style.height = '24px';
-            if (this.input.scrollHeight > 24) this.input.style.height = Math.min(this.input.scrollHeight, 150) + 'px';
+            // No-op for input type="text" to prevent expensive layout reflows
         }
 
         createBlock(commandStr) {
