@@ -423,7 +423,7 @@
 
             const shellsHTML = SHELLS.map(s => `<div class="dropdown-item shell-item" data-val="${s}">${s}</div>`).join('');
 
-
+            const t = THEMES[this.state.themeIdx] || THEMES[0];
             const header = hds_el('div', {className: 'hds-header', style: `background:rgba(${t.bg},0.95);padding:10px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid ${t.b};border-radius:10px 10px 0 0;font-size:12px;font-weight:bold;color:${t.fg};user-select:none;backdrop-filter:blur(10px);`});
             
             const macBtns = hds_el('div', {style: "display:flex;gap:8px;"}, [
