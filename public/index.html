@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hades Terminal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+
+        :root {
+            --bg: #09090b;
+            --fg: #e4e4e7;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: radial-gradient(circle at 50% -20%, #27272a, var(--bg) 80%);
+            background-color: var(--bg);
+            color: var(--fg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(24, 24, 27, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(63, 185, 80, 0.5), transparent);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            font-size: 15px;
+            opacity: 0.85;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            padding: 14px 24px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: grab;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid transparent;
+        }
+
+        .btn:active {
+            transform: scale(0.97) translateY(0);
+        }
+
+        /* Specific Button Styles */
+        .bookmarklet-ready {
+            background: linear-gradient(135deg, #22c55e, #15803d);
+            border: 1px solid rgba(74, 222, 128, 0.4);
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .bookmarklet-ready:hover {
+            background: linear-gradient(135deg, #4ade80, #16a34a);
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-dl {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+        }
+
+        .btn-dl:hover {
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .hint {
+            margin-top: 16px;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .bookmarklet-ready {
+            color: transparent;
+            position: relative;
+        }
+
+        .bookmarklet-ready::after {
+            content: "Drag to Bookmarks Bar";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <div
+                style="width:12px;height:12px;border-radius:50%;background:#3fb950;box-shadow:0 0 8px rgba(63,185,80,0.8);">
+            </div> Hades Terminal
+        </h1>
+        <p>You can just run things.. in a gvisor container (or try to escape it)</p>
+        <p style="margin-bottom:20px;font-size:13px;">A UI wrapper for Grok's command/code execution sandbox. Drag the
+            button below to
+            your bookmarks or install an extension, then run it on <a href="https://grok.com" target="_blank"
+                style="color:#58a6ff;text-decoration:none;font-weight:bold;">grok.com</a>.</p>
+
+        <div
+            style="font-size:12px; opacity:0.8; background:rgba(255,123,114,0.1); border:1px solid rgba(255,123,114,0.3); border-radius:6px; padding:12px; text-align:left; line-height:1.4;">
+            <strong style="color:#ff7b72;">Disclaimer:</strong> This was vibecoded and I didn't
+            really do much.<br /> None of this is thoroughly tested so use at your own risk.<br />
+            Source @ <a href="https://github.com/falsneg/grok-hades-terminal" target="_blank"
+                style="color:#c9d1d9;">github.com/falsneg/grok-hades-terminal</a>.
+        </div>
+
+        <div class="btn-group">
+            <a id="bookmarklet" href="#" class="btn bookmarklet-ready" title="Hades Terminal" draggable="true"
+                style="display:none;">Hades Terminal</a>
+            <a href="dl/hades-chromium.zip" class="btn btn-dl" download>Get Chromium Extension</a>
+            <a href="dl/hades-firefox.zip" class="btn btn-dl" download>Get Firefox Extension</a>
+            <a href="dl/hades.user.js" class="btn btn-dl" title="For Tampermonkey / Violentmonkey">Install Userscript
+                (Tampermonkey)</a>
+        </div>
+
+        <div class="hint" id="status">Fetching shitcode...</div>
+    </div>
+
+    <script>
+        fetch('./hades.js')
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.text();
+            })
+            .then(code => {
+                const uri = 'javascript:' + encodeURIComponent('(function(){' + code + '})();')
+                    .replace(/%20/g, ' ').replace(/%22/g, '"').replace(/%27/g, "'")
+                    .replace(/%28/g, '(').replace(/%29/g, ')').replace(/%3B/g, ';')
+                    .replace(/%3A/g, ':').replace(/%3D/g, '=').replace(/%2C/g, ',')
+                    .replace(/%7B/g, '{').replace(/%7D/g, '}').replace(/%5B/g, '[')
+                    .replace(/%5D/g, ']').replace(/%3E/g, '>').replace(/%3C/g, '<')
+                    .replace(/%3F/g, '?').replace(/%21/g, '!').replace(/%2B/g, '+')
+                    .replace(/%2A/g, '*').replace(/%2F/g, '/').replace(/%7C/g, '|')
+                    .replace(/%26/g, '&');
+                const btn = document.getElementById('bookmarklet');
+                btn.href = uri;
+                btn.style.display = 'block';
+                document.getElementById('status').style.display = 'none';
+            })
+            .catch(err => {
+                const btn = document.getElementById('bookmarklet');
+                btn.classList.remove('bookmarklet-ready');
+                btn.textContent = 'Failed to fetch script';
+                btn.style.background = '#30363d';
+                btn.style.color = '#8b949e';
+                btn.style.pointerEvents = 'none';
+                btn.style.cursor = 'not-allowed';
+                btn.removeAttribute('draggable');
+                btn.removeAttribute('href');
+                btn.style.display = 'block';
+                document.getElementById('status').innerHTML = 'Failed to load script. Error: ' + err.message;
+                document.getElementById('status').style.color = '#ff7b72';
+            });
+    </script>
+</body>
+
+</html>

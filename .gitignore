@@ -1,0 +1,7 @@
+.DS_Store
+node_modules/
+public/hades.js
+public/dl/
+extensions/chromium/hades.js
+extensions/firefox/hades.js
+*.zip

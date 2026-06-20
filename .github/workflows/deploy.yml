@@ -1,0 +1,69 @@
+name: Build and Deploy Hades Terminal
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compile and Package Artifacts
+        run: |
+          mkdir -p public/dl
+          
+          npx terser src/hades.js -c -m -o public/hades.js
+          
+          # Chromium & Firefox extensions packaging
+          cp src/hades.js extensions/chromium/
+          cp src/hades.js extensions/firefox/
+          (cd extensions/chromium && zip -r ../../public/dl/hades-chromium.zip .)
+          (cd extensions/firefox && zip -r ../../public/dl/hades-firefox.zip .)
+          
+          # Tampermonkey/Violentmonkey userscript wrapper injection
+          echo "// ==UserScript==" > public/dl/hades.user.js
+          echo "// @name         Grok Hades Terminal" >> public/dl/hades.user.js
+          echo "// @namespace    https://github.com/falsneg/grok-hades-terminal" >> public/dl/hades.user.js
+          echo "// @version      1.0.0" >> public/dl/hades.user.js
+          echo "// @description  Use Grok's run code in a nice terminal UI" >> public/dl/hades.user.js
+          echo "// @match        *://grok.com/*" >> public/dl/hades.user.js
+          echo "// @match        *://*.grok.com/*" >> public/dl/hades.user.js
+          echo "// @grant        none" >> public/dl/hades.user.js
+          echo "// ==/UserScript==" >> public/dl/hades.user.js
+          echo "" >> public/dl/hades.user.js
+          
+          cat src/hades.js >> public/dl/hades.user.js
+
+          touch public/.nojekyll
+
+      - name: Setup GitHub Pages Engine
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './public'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages CDN
+        id: deployment
+        uses: actions/deploy-pages@v4
